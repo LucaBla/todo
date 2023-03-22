@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :todo_tasks
+      get '/log', to: 'todo_tasks#log'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

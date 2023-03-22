@@ -3,7 +3,16 @@ class Api::V1::TodoTasksController < ApplicationController
   #before_action :authenticate_todo_user!
 
   def index
-    @todo_tasks = TodoTask.all
+    @todo_tasks = TodoTask.where('deadline >= ?', Date.yesterday)
+                          .or(TodoTask.where(deadline: nil))
+                          .order(:isAnytime, :deadline, :finished, :title)
+    
+
+    render json: @todo_tasks
+  end
+
+  def log
+    @todo_tasks = TodoTask.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
 
     render json: @todo_tasks
   end
@@ -44,7 +53,7 @@ class Api::V1::TodoTasksController < ApplicationController
   end
 
   def todo_task_params
-    params.require(:todo_task).permit(:title, :description, :reminder, :deadline, :finished)
+    params.require(:todo_task).permit(:title, :description, :reminder, :deadline, :finished, :isAnytime)
   end
 
 end
