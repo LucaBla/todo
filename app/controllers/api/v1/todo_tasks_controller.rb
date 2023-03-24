@@ -1,10 +1,11 @@
 class Api::V1::TodoTasksController < ApplicationController
   before_action :set_todo_task, only: %i[ show update destroy ]
-  #before_action :authenticate_todo_user!
+  before_action :authenticate_todo_user!
 
   def index
-    @todo_tasks = TodoTask.where('deadline >= ?', Date.yesterday)
-                          .or(TodoTask.where(deadline: nil))
+    @todo_tasks = current_todo_user.todo_tasks.where('deadline >= ?', Date.yesterday)
+                          .or(current_todo_user.todo_tasks.where(deadline: nil))
+                          .or(current_todo_user.todo_tasks.where(isAnytime: true))
                           .order(:isAnytime, :deadline, :finished, :title)
     
 
@@ -12,7 +13,7 @@ class Api::V1::TodoTasksController < ApplicationController
   end
 
   def log
-    @todo_tasks = TodoTask.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
+    @todo_tasks = current_todo_user.todo_tasks.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
 
     render json: @todo_tasks
   end
@@ -22,7 +23,8 @@ class Api::V1::TodoTasksController < ApplicationController
   end
 
   def create
-    @todo_task = TodoTask.new(todo_task_params)
+    #@todo_task = TodoTask.new(todo_task_params)
+    @todo_task = current_todo_user.todo_tasks.create(todo_task_params)
     if @todo_task.save
       render json: @todo_task, status: :created
     else
@@ -49,7 +51,7 @@ class Api::V1::TodoTasksController < ApplicationController
   private
 
   def set_todo_task
-    @todo_task = TodoTask.find(params[:id])
+    @todo_task = current_todo_user.todo_tasks.find(params[:id])
   end
 
   def todo_task_params

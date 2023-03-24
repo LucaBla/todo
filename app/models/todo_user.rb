@@ -5,4 +5,6 @@ class TodoUser < ApplicationRecord
          :jwt_authenticatable,
          :registerable,
          jwt_revocation_strategy: JwtDenylist
+
+  has_many :todo_tasks
 end
