@@ -10,6 +10,9 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :todo_tasks
       get '/log', to: 'todo_tasks#log'
+      get '/friendships', to: 'friendships#index'
+      post '/friendships', to: 'friendships#create'
+      put '/friendships/:id', to: 'friendships#update'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
