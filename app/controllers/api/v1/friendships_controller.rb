@@ -3,15 +3,15 @@ class Api::V1::FriendshipsController < ApplicationController
   before_action :authenticate_todo_user!
 
   def index
-    @friendships = current_todo_user.friends
+    @friendships = current_todo_user.friends.order(:email)
 
     render json: @friendships
   end
 
   def create
-    friend = TodoUser.find(friendship_params[:friend_id])
+    friend = TodoUser.find_by(email: friendship_params[:friend_email].downcase)
 
-    if current_todo_user.friends.include?(friend)
+    if current_todo_user.friends.include?(friend) #or already has send request
       render json: { message: 'Friendship already exists' }, status: :unprocessable_entity
     else
       if Friendship.befriend(current_todo_user, friend)
@@ -39,6 +39,6 @@ class Api::V1::FriendshipsController < ApplicationController
   end
 
   def friendship_params
-    params.require(:friendship).permit(:friend_id, :accepted)
+    params.require(:friendship).permit(:friend_email, :accepted)
   end
 end

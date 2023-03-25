@@ -9,8 +9,8 @@ class Friendship < ApplicationRecord
       return false
     end
     transaction do
-      create(todo_user: todo_user, friend: friend)
-      create(todo_user: friend, friend: todo_user)
+      create(todo_user: todo_user, friend: friend, creator_id: todo_user.id)
+      create(todo_user: friend, friend: todo_user, creator_id: todo_user.id)
     end
     return true
   end
