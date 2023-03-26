@@ -12,6 +12,7 @@ class Api::V1::FriendshipsController < ApplicationController
     @friendships = current_todo_user.friendships
                                     .where(accepted: false)
                                     .where.not(creator_id: current_todo_user.id)
+                                    .order(created_at: :desc)
                                     .includes(:friend)
 
     friendships_with_email = @friendships.map do |friendship|
@@ -25,6 +26,14 @@ class Api::V1::FriendshipsController < ApplicationController
     }
     end
     render json: friendships_with_email
+  end
+
+  def friend_request_count
+    @count = current_todo_user.friendships
+    .where(accepted: false)
+    .where.not(creator_id: current_todo_user.id).count
+
+    render json: @count
   end
 
   def create
@@ -53,7 +62,7 @@ class Api::V1::FriendshipsController < ApplicationController
 
   #accepts friend_id and destroys the friendship with current_todo_user
   #or
-  #aceppts friendship_id and destroy the friendship
+  #accepts friendship_id and destroy the friendship
   def destroy
     if(params.has_key?(:id))
       set_friendship()
