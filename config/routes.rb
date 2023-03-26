@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get '/friendships', to: 'friendships#index'
       post '/friendships', to: 'friendships#create'
       put '/friendships/:id', to: 'friendships#update'
+      delete '/friendships/:id', to: 'friendships#destroy'
+      delete '/friendships', to: 'friendships#destroy'
     end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
