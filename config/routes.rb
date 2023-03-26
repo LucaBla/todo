@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       resources :todo_tasks
       get '/log', to: 'todo_tasks#log'
       get '/friendships', to: 'friendships#index'
+      get '/friendships/requests', to: 'friendships#friend_request'
       post '/friendships', to: 'friendships#create'
       put '/friendships/:id', to: 'friendships#update'
       delete '/friendships/:id', to: 'friendships#destroy'

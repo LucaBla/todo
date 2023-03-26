@@ -8,6 +8,25 @@ class Api::V1::FriendshipsController < ApplicationController
     render json: @friendships
   end
 
+  def friend_request
+    @friendships = current_todo_user.friendships
+                                    .where(accepted: false)
+                                    .where.not(creator_id: current_todo_user.id)
+                                    .includes(:friend)
+
+    friendships_with_email = @friendships.map do |friendship|
+    {
+      id: friendship.id,
+      accepted: friendship.accepted,
+      created_at: friendship.created_at,
+      updated_at: friendship.updated_at,
+      todo_user_id: friendship.todo_user_id,
+      creator_email: friendship.friend.email
+    }
+    end
+    render json: friendships_with_email
+  end
+
   def create
     friend = TodoUser.find_by(email: friendship_params[:friend_email].downcase)
 
