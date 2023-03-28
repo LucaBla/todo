@@ -31,6 +31,9 @@ class Api::V1::TodoTasksController < ApplicationController
   def create
     #@todo_task = TodoTask.new(todo_task_params)
     @todo_task = current_todo_user.created_todo_tasks.create(todo_task_params)
+    if(params[:todo_task][:participants_id].present?)
+      @todo_task.participants = current_todo_user.friends.where(id: params[:todo_task][:participants_id])
+    end
     if @todo_task.save
       render json: @todo_task, status: :created
     else
@@ -40,7 +43,7 @@ class Api::V1::TodoTasksController < ApplicationController
 
   def update
     if(params[:todo_task][:participants_id].present?)
-      @todo_task.participants = TodoUser.where(id: params[:todo_task][:participants_id])
+      @todo_task.participants = current_todo_user.friends.where(id: params[:todo_task][:participants_id])
     end
     if @todo_task.update(todo_task_params)
       render json: @todo_task
