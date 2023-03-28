@@ -3,17 +3,23 @@ class Api::V1::TodoTasksController < ApplicationController
   before_action :authenticate_todo_user!
 
   def index
-    @todo_tasks = current_todo_user.todo_tasks.where('deadline >= ?', Date.yesterday)
-                          .or(current_todo_user.todo_tasks.where(deadline: nil))
-                          .or(current_todo_user.todo_tasks.where(isAnytime: true))
-                          .order(:isAnytime, :deadline, :finished, :title)
+    # @todo_tasks = current_todo_user.todo_tasks.where('deadline >= ?', Date.yesterday)
+    #                       .or(current_todo_user.todo_tasks.where(deadline: nil))
+    #                       .or(current_todo_user.todo_tasks.where(isAnytime: true))
+    #                       .order(:isAnytime, :deadline, :finished, :title)
+    all_todo_tasks= current_todo_user.all_todo_tasks
+
+    @todo_tasks = all_todo_tasks.where('deadline >= ?', Date.yesterday)
+                             .or(all_todo_tasks.where(deadline: nil))
+                             .or(all_todo_tasks.where(isAnytime: true))
+                             .order(:isAnytime, :deadline, :finished, :title)
     
 
     render json: @todo_tasks
   end
 
   def log
-    @todo_tasks = current_todo_user.todo_tasks.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
+    @todo_tasks = current_todo_user.all_todo_tasks.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
 
     render json: @todo_tasks
   end
@@ -24,7 +30,7 @@ class Api::V1::TodoTasksController < ApplicationController
 
   def create
     #@todo_task = TodoTask.new(todo_task_params)
-    @todo_task = current_todo_user.todo_tasks.create(todo_task_params)
+    @todo_task = current_todo_user.created_todo_tasks.create(todo_task_params)
     if @todo_task.save
       render json: @todo_task, status: :created
     else
@@ -51,7 +57,7 @@ class Api::V1::TodoTasksController < ApplicationController
   private
 
   def set_todo_task
-    @todo_task = current_todo_user.todo_tasks.find(params[:id])
+    @todo_task = current_todo_user.all_todo_tasks.find(params[:id])
   end
 
   def todo_task_params
