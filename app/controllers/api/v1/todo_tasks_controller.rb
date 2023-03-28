@@ -10,9 +10,9 @@ class Api::V1::TodoTasksController < ApplicationController
     all_todo_tasks= current_todo_user.all_todo_tasks
 
     @todo_tasks = all_todo_tasks.where('deadline >= ?', Date.yesterday)
-                             .or(all_todo_tasks.where(deadline: nil))
-                             .or(all_todo_tasks.where(isAnytime: true))
-                             .order(:isAnytime, :deadline, :finished, :title)
+                                .or(all_todo_tasks.where(deadline: nil))
+                                .or(all_todo_tasks.where(isAnytime: true))
+                                .order(:isAnytime, :deadline, :finished, :title)
     
 
     render json: @todo_tasks
@@ -39,6 +39,9 @@ class Api::V1::TodoTasksController < ApplicationController
   end
 
   def update
+    if(params[:todo_task][:participants_id].present?)
+      @todo_task.participants = TodoUser.where(id: params[:todo_task][:participants_id])
+    end
     if @todo_task.update(todo_task_params)
       render json: @todo_task
     else
@@ -61,7 +64,8 @@ class Api::V1::TodoTasksController < ApplicationController
   end
 
   def todo_task_params
-    params.require(:todo_task).permit(:title, :description, :reminder, :deadline, :finished, :isAnytime)
+    params.require(:todo_task)
+          .permit(:title, :description, :reminder, :deadline, :finished, :isAnytime)
   end
 
 end
