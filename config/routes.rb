@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :todo_tasks
+      get '/todo_tasks/:id/creator', to: 'todo_tasks#creator'
+      get '/todo_tasks/:id/participants', to: 'todo_tasks#participants'
       get '/log', to: 'todo_tasks#log'
       get '/friendships', to: 'friendships#index'
       get '/friendships/requests', to: 'friendships#friend_request'

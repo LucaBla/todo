@@ -1,5 +1,5 @@
 class Api::V1::TodoTasksController < ApplicationController
-  before_action :set_todo_task, only: %i[ show update destroy ]
+  before_action :set_todo_task, only: %i[ show update destroy creator participants ]
   before_action :authenticate_todo_user!
 
   def index
@@ -22,6 +22,18 @@ class Api::V1::TodoTasksController < ApplicationController
     @todo_tasks = current_todo_user.all_todo_tasks.where('deadline < ?', Date.yesterday).order(:deadline, :finished, :title)
 
     render json: @todo_tasks
+  end
+
+  def creator
+    @creator = @todo_task.creator
+
+    render json: @creator
+  end
+
+  def participants
+    @participants = @todo_task.participants
+
+    render json: @participants
   end
 
   def show
