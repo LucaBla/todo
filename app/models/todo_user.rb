@@ -3,6 +3,7 @@ class TodoUser < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable,
          :jwt_authenticatable,
+         :recoverable,
          :registerable,
          jwt_revocation_strategy: JwtDenylist
 
