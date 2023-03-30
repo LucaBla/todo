@@ -2,10 +2,14 @@ Rails.application.routes.draw do
   devise_for :todo_users,
              controllers:{
                 sessions: 'users/sessions',
-                registrations: 'users/registrations'
+                registrations: 'users/registrations',
+                passwords: 'passwords'
              },
              defaults: {format: :json}
   get '/member-data', to: 'members#show'
+  post '/passwords', to: 'passwords#create'
+  put '/passwords/reset', to: 'passwords#update'
+  get '/passwords/edit', to: 'passwords#edit'
   namespace :api do
     namespace :v1 do
       resources :todo_tasks
