@@ -2,7 +2,7 @@ class PasswordsController < Devise::PasswordsController
   respond_to :html
 
   def create
-    user = TodoUser.find_by(email: params[:email])
+    user = TodoUser.find_by(email: params[:email].downcase)
     if user.present?
       user.send_reset_password_instructions
       render json: { message: 'Reset password instructions sent.' }
