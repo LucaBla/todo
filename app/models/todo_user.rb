@@ -4,8 +4,11 @@ class TodoUser < ApplicationRecord
   devise :database_authenticatable,
          :jwt_authenticatable,
          :recoverable,
+         :validatable,
          :registerable,
          jwt_revocation_strategy: JwtDenylist
+
+  validate :password_complexity
 
   #has_many :todo_tasks
   #has_and_belongs_to_many :todo_tasks
@@ -29,5 +32,16 @@ class TodoUser < ApplicationRecord
     participated_tasks = self.participated_tasks
 
     todo_tasks = created_tasks.append(participated_tasks)
+  end
+
+  def password_complexity
+    # Regexp extracted from https://stackoverflow.com/questions/19605150/regex-for-password-must-contain-at-least-eight-characters-at-least-one-number-a
+    return if password.blank? ||
+              password =~ /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[[:^alnum:]])/x
+
+    errors.add :password,
+               'Complexity requirement not met.
+                Length should be 8-70 characters and include: 
+                1 uppercase, 1 lowercase, 1 digit and 1 special character'
   end
 end
