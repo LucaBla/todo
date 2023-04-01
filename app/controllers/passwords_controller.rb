@@ -1,4 +1,6 @@
 class PasswordsController < Devise::PasswordsController
+  respond_to :html
+
   def create
     user = TodoUser.find_by(email: params[:email])
     if user.present?
@@ -10,13 +12,17 @@ class PasswordsController < Devise::PasswordsController
   end
 
   def edit
-    puts 'TEST'
-    @reset_password_token = params[:reset_password_token]
+    super
+    # @reset_password_token = params[:reset_password_token]
+    # html1 = "<html><head></head><body><h1>Holololo</h1></body></html>".html_safe#, :content_type => 'text/html'
+    # render file: "#{Rails.root}/public/reset_password.html",  layout: false
     #render json: { message: 'Test' }
-    render file: "public/reset_password.html", layout: false
+    #render file: "public/reset_password.html", layout: false
+    #render "public/reset_password.html"
   end
 
   def update
+    #super
     self.resource = resource_class.reset_password_by_token(resource_params)
     if resource.errors.empty?
       render json: { message: 'Password updated.' }
