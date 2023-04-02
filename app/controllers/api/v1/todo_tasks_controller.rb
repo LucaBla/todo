@@ -9,10 +9,11 @@ class Api::V1::TodoTasksController < ApplicationController
     #                       .order(:isAnytime, :deadline, :finished, :title)
     all_todo_tasks= current_todo_user.all_todo_tasks
 
-    @todo_tasks = all_todo_tasks.where('deadline >= ?', Date.yesterday)
-                                .or(all_todo_tasks.where(deadline: nil))
-                                .or(all_todo_tasks.where(isAnytime: true))
-                                .order(:isAnytime, :deadline, :finished, :title)
+    # @todo_tasks = all_todo_tasks.where('deadline >= ?', Date.yesterday)
+    #                             .or(all_todo_tasks.where(deadline: nil))
+    #                             .or(all_todo_tasks.where(isAnytime: true))
+    #                             .order(:isAnytime, :deadline, :finished, :title)
+    @todo_tasks = all_todo_tasks.order(isAnytime: :desc, deadline: :asc, finished: :asc, title: :asc)
     
 
     render json: @todo_tasks
