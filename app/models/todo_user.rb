@@ -27,11 +27,19 @@ class TodoUser < ApplicationRecord
   end
 
   def all_todo_tasks
+    # created_tasks = self.created_todo_tasks.dup
+    #
+    # participated_tasks = self.participated_tasks.dup
+    #
+    #todo_tasks = created_tasks.append(participated_tasks)
+
     created_tasks = self.created_todo_tasks
     
     participated_tasks = self.participated_tasks
 
-    todo_tasks = created_tasks.append(participated_tasks)
+    todo_tasks = created_tasks + participated_tasks
+
+    TodoTask.where(id: todo_tasks.map(&:id))
   end
 
   def password_complexity
