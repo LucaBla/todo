@@ -17,6 +17,7 @@ Devise.setup do |config|
 
   config.jwt do |jwt|
     jwt.secret = Rails.application.credentials.devise[:jwt_secret_key]
+    jwt.expiration_time = 10.years.to_i
   end
 
   config.navigational_formats = []
